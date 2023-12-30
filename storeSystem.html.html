@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button{
+            background-color: black;
+            color: white;
+        }
+        button:hover{
+           background-color: red;
+        }
+        table{
+            border-collapse: collapse;
+            
+        }
+        .td1{
+           font-weight: bold;
+           text-align: center;
+          }
+        .th1{
+            padding-left: 27px;
+            padding-right: 30px;
+            margin-top: 10px;
+           background-color:rgb(91, 74, 185);
+           color: white;
+           }
+           .id{
+            padding-top: 20px;
+           }
+
+           th{
+            background-color:rgb(91, 74, 185);
+            color: white;
+            font-weight: bold;
+            padding-left: 25px;
+            padding-right: 25px;
+           }
+           .td{
+            background-color: aqua;
+            padding-left: 25px;
+            padding-right: 25px;
+            }
+            .pink{
+                background-color: rgb(248, 213, 219);
+            }
+            .green{
+                background-color: rgb(191, 238, 191);
+            }
+</style>
+</head>
+<body>
+    <h2>Store Management System</h2><br>
+    <button onclick='showProduct()'>Products</button>
+    <button onclick='order()'>Enter an Order</button>
+    <button onclick="allOrder()">All Orders</button>
+    <div id="productData"></div>
+<script>
+    let newArr=[];
+    let product = [
+              {"prodcode":"PEP122","prodname":"Pepsi","price":12,"category":"Food","offer":"10%"},
+              {"prodcode":"COK238","prodname":"Coke","price":15,"category":"Food","offer":"15%"},
+              {"prodcode":"MIR411","prodname":"Mirinda","price":30,"category":"Food","offer":"20%"},
+              {"prodcode":"RB0277","prodname":"Red Bull","price":80,"category":"Food","offer":"None"},
+              {"prodcode":"LUX831","prodname":"Lux","price":10,"category":"Soap","offer":"15%"},
+              {"prodcode":"DOV672","prodname":"Dove","price":25,"category":"Soap","offer":"20%"},
+              {"prodcode":"DET810","prodname":"Dettol","price":15,"category":"Soap","offer":"None"},
+              {"prodcode":"PAN590","prodname":"Pantene","price":60,"category":"Shampoo","offer":"None"},
+              {"prodcode":"SUN677","prodname":"Sunsilk","price":48,"category":"Shampoo","offer":"15%"},
+              {"prodcode":"GAR004","prodname":"Garnier","price":75,"category":"Shampoo","offer":"10%"}];
+
+  let prodcode = ["PEP122", "COK238","MIR411","RB0277","LUX831","DOV672","DET810","PAN590","SUN677","GAR004"];            
+
+  let locationArr =['Sector 14A', 'Sector 15B','Sector 22', 'Pioneer Chowk'];
+  let deliveryArr= ['Before 10AM','10AM-12PM','12PM-2PM','2PM-4PM','4PM-6PM','After 6PM'];
+  let orderArr=[
+                {"custname":"Jack Smith","mobile":"425361434","location":"Sector 14","slot":"12PM-2PM","value":72.6,
+                "items":[{"prodcode":"PEP122","quantity":2},{"prodcode":"COK238","quantity":4}]},
+                {"custname":"Mary Gomes","mobile":"723476123","location":"Sector 22","slot":"4PM-6PM","value":130.60,
+                "items":[{"prodcode":"SUN677","quantity":2},{"prodcode":"LUX831","quantity":4},{"prodcode":"DET810","quantity":1}]},
+                {"custname":"Tim May","mobile":"835099614","location":"Pioneer Chowk","slot":"Before10AM","value":705,
+                "items":[{"prodcode":"GAR004","quantity":6},{"prodcode":"RB0277","quantity":3},{"prodcode":"MIR411","quantity":2}]}
+            ];
+
+  function makeDD(id,arr, first, selVal){
+        
+        const arr1 = arr.map(function(opt){
+        if(opt==selVal)
+        return '<option selected>'+opt+'</option>';
+        else
+        return '<option>'+opt+'</option>';
+        });
+      let header = '<option disabled>'+first+'</option>';
+      if(selVal=='')
+      header = '<option disabled selected>'+first+'</option>';
+      let s1 = '<select id=\''+id+'\'>' + header+arr1.join('')+'</select>';
+      return s1;
+    }
+
+function showProduct()
+{
+let arr= product.map(function(ele,index){
+        let str = '<tr class="'+(index%2==0 ?  'green': 'pink')+'">';
+        str += '<td class="td1">'+ele.prodcode+'</td>'; 
+        str += '<td class="td1">'+ele.prodname+'</td>'; 
+        str += '<td class="td1">'+ele.price+'</td>'; 
+        str += '<td class="td1">'+ele.category+'</td>'; 
+        str += '<td class="td1">'+ele.offer+'</td>'; 
+        str += '</tr>';  
+        return str; 
+    });
+    let header = '<tr>';
+    header += '<th class=\'th1\'>Code</th>'; 
+    header += '<th class=\'th1\'>Name</th>'; 
+    header += '<th class=\'th1\'>Price</th>'; 
+    header += '<th class=\'th1\'>Category</th>'; 
+    header += '<th class=\'th1\'>Discount</th>'; 
+    header += '</tr>';
+    let html= '<table>'+header+arr.join('')+'</table>';
+    let element = document.getElementById('productData');
+    element.innerHTML = html;
+}
+
+const quantityArr=[];
+    for(let i=1; i<=6; i++)
+    {
+        quantityArr.push(i);
+    }
+    
+function order(){
+    let s1 = '<label style="margin-left: 140px;">Customer Name</label>'+' ';
+        s1 += '<input type="text" id="name"><br><br>';
+        s1 += '<label style="margin-left: 140px;">Mobile Number</label>'+' ';
+        s1 += '<input type="text" id="mobile"><br><br>';
+
+        s1 += '<label style="margin-left: 190px;">Location</label>'+' ';
+        s1 += makeDD('location',locationArr,'Choose Location','')+'<br><br>';
+
+        s1 += '<label style="margin-left: 160px;">Delivery Slot</label>'+' ';
+        s1 += makeDD('delivery',deliveryArr,'Choose Delivery Slot','')+'<br><br>';
+
+        s1 += '<label style="margin-left: 160px;">Add to Order</label>'+' ';
+        s1 += makeDD('code',prodcode,'Select Product','')+' ';
+        s1 += makeDD('quantity',quantityArr,'Select quantity','')+' ';
+        s1 += '<button onclick=\'addOrder()\'>Add to Order</button><br><br>';
+        
+        s1 += '<button onclick=\'CompleteOrder()\' style="margin-left: 250px;">Order Complete</button>'+' ';
+        s1 += '<button onclick=\'cancel()\' >Cancel Order</button>'+'<br><br>';
+
+ 
+ let element = newArr.map(function(ele){  
+    let arr = '<tr>';
+        arr += '<td class="td">'+ele.prodcode+'</td>';
+        arr += '<td class="td">'+ele.prodname+'</td>';
+        arr += '<td class="td">'+ele.price+'</td>';
+        arr += '<td class="td">'+ele.quantity+'</td>';
+        arr += '<td class="td">'+ele.offer+'</td>';
+        arr += '<td class="td">'+ele.netAmount+'</td>';
+        arr += '<td class="td"><button onclick=remove("'+ele.prodcode+'")>Remove</button>'+'</td>';
+        arr += '</tr>';
+        return arr;     
+       
+        });
+            let header = '<tr>';
+             header += '<th>Code</th>'+' ';  
+             header += '<th>Name</th>'+' ';  
+             header += '<th>Price</th>'+' '; 
+             header += '<th>Quantity</th>';  
+             header += '<th>Discount</th>';  
+             header += '<th>Net Amount</th>';
+             header += '<th></th>';
+             header += '</tr>';  
+        
+        let html= '<table id="table">'+header+element.join('')+'</table>';
+        let div = document.getElementById('productData');
+        div.innerHTML = s1+html;
+    }
+    
+
+function addOrder()
+    {
+       let prodCode = document.getElementById('code').value;
+       let arr = newArr.find(function(ele){
+        return ele.prodcode==prodCode;
+       });
+      
+       if(arr){
+        let percentageString = arr.offer;
+        let percentageInt = parseInt(percentageString);
+         arr.quantity += +document.getElementById('quantity').value; 
+         arr.netAmount = arr.price*arr.quantity-(arr.price*arr.quantity*(percentageInt/100)); 
+         }
+      else{
+        let Code = document.getElementById('code').value;
+        let dd = product.find(function(ele){
+            return ele.prodcode==Code;
+        });
+        let quant = +document.getElementById('quantity').value;
+       
+        let grossAmount=0;
+        let percentageString =dd.offer;
+        let percentageInt = parseInt(percentageString);
+        if(percentageString=='None')
+        {
+         grossAmount= +dd.price*quant;
+        }
+        else{
+         grossAmount = +dd.price*quant-(dd.price*quant*(percentageInt/100));
+        }
+       let st={prodcode:Code, prodname:dd.prodname,price:dd.price, offer:dd.offer, quantity:quant,netAmount:grossAmount};
+        newArr.push(st);
+        code.value= Code;
+        quantity.value = quant;
+    }
+     order();
+ }
+
+function remove(prodCode){
+    
+    let index = newArr.findIndex(function(ele){
+                return ele.prodcode==prodCode;
+            });
+
+            console.log(index);
+            if(index>=0)
+            newArr.splice(index,1);
+            order();
+}
+
+function allOrder()
+     {
+       let arr = orderArr.map(function(ele){
+         let str = '<tr class="id">';
+         str += 'Customer Name : '+ele.custname+' , ';
+         str += 'Mobile : '+ele.mobile+' ,';
+         str+= 'Location : '+ele.location+' ,';
+         str+= 'Delivery Slot : '+ele.slot;
+         str += show(ele);
+         str += '</tr>';
+        return str; 
+        });
+        
+       let div = document.getElementById('productData');
+       div.innerHTML = arr;
+    }
+   
+    function show(orderArr){
+    if (orderArr && orderArr.items && Array.isArray(orderArr.items)) {
+       let a = orderArr.items.map(function(val){
+            let products = product.find(function(a){
+                return a.prodcode==val.prodcode;
+            });
+        
+            let netAmount=0       
+             let amount = products.offer;
+            let percentageInt = parseInt(amount);
+            if(amount=='None')
+               netAmount = products.price*val.quantity;
+            else
+               netAmount = products.price*val.quantity-(products.price*val.quantity*(percentageInt/100));
+            let ar = '<tr>';
+               ar += '<td class="td">'+val.prodcode+'</td>'; 
+               ar += '<td class="td">'+products.prodname+'</td>'; 
+               ar += '<td class="td">'+products.price+'</td>'; 
+               ar += '<td class="td">'+val.quantity+'</td>'; 
+               ar += '<td class="td">'+products.offer+'</td>';
+               ar += '<td class="td">'+netAmount+'</td>';
+               ar += '</tr>';
+               return ar;
+           });
+           let header = '<tr>';
+            header += '<th class="th">Code</td>';
+            header += '<th class="th">Name</td>';
+            header += '<th class="th">Price</td>';
+            header += '<th class="th">Quantity</td>';
+            header += '<th class="th">Discount</td>';
+            header += '<th class="th">Net Amount</td>';   
+            header += '</tr>';
+            let countQuantity = +orderArr.items.reduce(function(acc,curr){
+                    return acc+curr.quantity;
+            },0);
+            let html1 = '<p>Order Value :' +orderArr.value+' , '+' Number of items : '+(countQuantity)+'</p>';
+            html1 += '<table id="table">'+header+a.join('')+'</table>';
+            return html1;
+         }
+         else{
+            return '';
+         }
+     }
+
+function CompleteOrder(){
+    let name = document.getElementById('name').value;
+    let mobile= document.getElementById('mobile').value;
+    let location = document.getElementById('location').value;
+    let delivery = document.getElementById('delivery').value;
+    if(name.length<5)
+    alert("Name should be minimum 5 chars");
+    else if(!/^\d{10}$/.test(mobile))
+    {
+    if(mobile==='' || mobile.length<10) 
+        alert("Mobile number should have 10 chars");
+    else
+        alert("mobile number should only digit");
+    }
+    else if(location==='Choose Location')
+    alert("Select the location");
+    else if(delivery==='Choose Delivery Slot')
+    alert("Select the delivery slot");
+    
+    else{
+     let st= 'Customer Name : '+name+', ';
+     st += 'Mobile : '+mobile+', ';
+     st += 'Location : '+location+', ';
+     st += 'Delivery Slot : '+delivery;
+    
+     let element = newArr.map(function(ele){  
+        let arr = '<tr>';
+        arr += '<td class="td">'+ele.prodcode+'</td>';
+        arr += '<td class="td">'+ele.prodname+'</td>';
+        arr += '<td class="td">'+ele.price+'</td>';
+        arr += '<td class="td">'+ele.quantity+'</td>';
+        arr += '<td class="td">'+ele.offer+'</td>';
+        arr += '<td class="td">'+ele.netAmount+'</td>';
+        arr += '</tr>';
+        return arr;     
+       });
+         let header = '<tr>';
+         header += '<th>Code</th>'+' ';  
+         header += '<th>Name</th>'+' ';  
+         header += '<th>Price</th>'+' '; 
+         header += '<th>Quantity</th>';  
+         header += '<th>Discount</th>';  
+         header += '<th>Net Amount</th>';
+         header += '</tr>'; 
+         let countQuantity = +newArr.reduce(function(acc,curr){
+            return acc+curr.quantity;
+        },0);
+        let value = +newArr.reduce(function(acc,curr){
+            return acc+curr.netAmount;
+        },0);
+        let html = '<p>Order Value : '+value +' , '+' Number of items : '+countQuantity+'</p>';
+        html += '<table id="table">'+header+element.join('')+'</table>';
+        let div = document.getElementById('productData');
+        div.innerHTML = st+html;
+        
+        let order = {
+            custname: name,
+            mobile: mobile,
+            location: location,
+            slot: delivery,
+            value: value,
+            items: newArr
+        };
+        orderArr.unshift(order);
+        newArr=[];
+        allOrder();
+    }
+   }
+
+function cancel(){
+   
+    document.getElementById('name').value='';
+    document.getElementById('mobile').value='';
+    document.getElementById('location').value='Choose Location';
+    document.getElementById('delivery').value='Choose Delivery Slot';
+     document.getElementById('code').value='Select Product';
+    document.getElementById('quantity').value='Select quantity';
+    var table = document.getElementById("table");
+    table.innerHTML=table.rows[0].outerHTML;
+    
+    newArr=[];
+    
+   
+}
+
+
+   
+
+    </script>
+</body>
+</html>
